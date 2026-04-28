@@ -212,12 +212,104 @@ conda env create -f environment.yml
 
 ---
 
-## 練習任務（選做，不計分）
+## 第 10 週作業：Conda 環境實作
 
-1. 建立一個名為 `w10-conda` 的環境，Python 版本指定為 3.11
-2. 進入該環境後安裝 `pandas` 和 `jupyter`
-3. 用 `conda list` 截圖證明套件已裝好
-4. 用 `conda env export > environment.yml` 匯出設定檔
-5. 用 `conda clean --all` 清理暫存，記錄釋放的空間大小
+### 作業資訊
 
-完成後可在 `week10/conda_practice.txt` 記錄每步指令與輸出。
+| 項目 | 說明 |
+|------|------|
+| 繳交方式 | 在 Fork 的 `week10/` 資料夾中建立 `q1_conda.txt`，push 到 Fork |
+| 繳交期限 | 下週上課前 |
+| PR 標題 | 學號_姓名（首次繳交建立，之後 push 自動更新） |
+
+### 繳交步驟
+
+1. 同步老師的最新版本：到你的 Fork 頁面點「**Sync fork**」>「**Update branch**」
+2. 本機拉取最新版：`git pull origin main`
+3. 在 `week10/` 中建立 `q1_conda.txt`
+4. 完成下方任務並貼上每步輸出
+5. Push 到你的 Fork：
+   ```bash
+   git add week10/
+   git commit -m "完成第10週作業"
+   git push origin main
+   ```
+
+### 第 1 題：Conda 環境建立與套件管理
+
+請在電腦上完成以下任務，將每步指令與輸出存入 `week10/q1_conda.txt`：
+
+```
+姓名：
+學號：
+
+=== 任務 1：確認 Conda 版本 ===
+conda --version
+（貼上結果）
+
+conda info
+（貼上結果，至少包含 conda version、active environment、base environment 三行）
+
+=== 任務 2：建立新環境 ===
+建立一個名為「學號_w10」的環境，Python 版本指定為 3.11
+（例如學號 A11218001 → A11218001_w10）
+
+conda create -n [你的學號]_w10 python=3.11 -y
+（貼上最後幾行結果，看到 "done" 字樣）
+
+conda env list
+（貼上結果，確認環境出現在清單中）
+
+=== 任務 3：啟動環境並安裝套件 ===
+conda activate [你的學號]_w10
+（貼上提示符變化，例如：(A11218001_w10) user@host:~$）
+
+conda install pandas numpy matplotlib -y
+（貼上最後幾行結果）
+
+conda list | head -20
+（貼上結果，確認 pandas、numpy、matplotlib 都在）
+
+=== 任務 4：匯出環境設定檔 ===
+conda env export > week10/environment.yml
+cat week10/environment.yml
+（貼上 environment.yml 完整內容）
+
+=== 任務 5：清理暫存 ===
+conda clean --all -y
+（貼上結果，記錄釋放的空間大小，例如 "Removed XX MB"）
+
+=== 任務 6：觀念回答 ===
+Q1：為什麼不要直接在 base 環境安裝專案套件？這樣做有什麼壞處？
+A1：
+
+Q2：conda install 和 pip install 有什麼差異？什麼情況下會建議用 pip？
+A2：
+
+Q3：environment.yml 的用途是什麼？換電腦時要怎麼用它快速重建環境？
+A3：
+```
+
+### 繳交 Checklist
+
+- [ ] `week10/q1_conda.txt` 包含 6 項任務的指令與輸出
+- [ ] `week10/environment.yml` 已產生並 push 到 Fork
+- [ ] 三題觀念題已作答
+- [ ] 已 push 到 Fork（確認 PR 中可看到本週 commit）
+
+### 常見問題
+
+**Q：執行 `conda` 指令出現 "command not found"？**
+表示 Conda 還沒裝或環境變數沒設定。Windows 用戶請從「開始選單」開啟「Anaconda Prompt」操作；macOS / Linux 用戶請執行 `source ~/miniconda3/bin/activate` 後再試。
+
+**Q：`conda activate` 出現 "CommandNotFoundError: Your shell has not been properly configured"？**
+首次使用需執行一次 `conda init bash`（或 `conda init zsh`），然後關掉終端機重開即可。
+
+**Q：建立環境時卡在 "Solving environment"？**
+Conda 在求解相依性，較慢屬正常。若超過 5 分鐘可中斷後改用更快的求解器：`conda install -n base conda-libmamba-solver` 後再執行 `conda config --set solver libmamba`。
+
+**Q：`conda install` 出現 PackagesNotFoundError？**
+代表預設 channel 找不到該套件。可加上 conda-forge channel：`conda install -c conda-forge [package_name]`，仍找不到時才考慮用 `pip install`。
+
+**Q：不小心把套件裝到 base 怎麼辦？**
+先 `conda activate` 切到正確環境再裝一次。base 中誤裝的套件可用 `conda remove -n base [package_name]` 移除。
